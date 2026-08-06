@@ -1,0 +1,106 @@
+app-id: io.github.joshuaroman.AtomicBasejump
+runtime: org.kde.Platform
+runtime-version: '6.11'
+sdk: org.kde.Sdk
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '6.11'
+command: basejump-launcher
+
+finish-args:
+  # Wayland & X11 display access
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+
+  # Network access for fetching container image tags from Quay & GHCR
+  - --share=network
+
+  # DBus access to rpm-ostreed for status/deployments (read path)
+  - --socket=system-bus
+  - --system-talk-name=org.projectatomic.rpmostree1
+
+  # Reboot via systemd-logind
+  - --system-talk-name=org.freedesktop.login1
+
+  # KDE System Tray & Notification permissions
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem.*
+  - --talk-name=org.freedesktop.Notifications
+
+  # Host CLI for mutations (rpm-ostree / ostree) — required on Atomic Flatpak
+  - --talk-name=org.freedesktop.Flatpak
+
+  # Filesystem access for reading local RPM files and staging them for host rpm-ostree
+  - --filesystem=host
+
+modules:
+  - name: gtk4
+    buildsystem: meson
+    config-opts:
+      - -Dbuild-tests=false
+      - -Dbuild-examples=false
+      - -Dmedia-gstreamer=disabled
+      - -Dbroadway-backend=false
+      - -Dsysprof=disabled
+      - -Dtracker=disabled
+      - -Dcolord=disabled
+      - -Dintrospection=enabled
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/gtk/4.14/gtk-4.14.4.tar.xz
+        sha256: 443518b97e8348f9f6430ac435b1010f9a6c5207f4dc6a7cd5d24e3820cee633
+
+  - name: libadwaita
+    buildsystem: meson
+    config-opts:
+      - -Dtests=false
+      - -Dexamples=false
+      - -Dvapi=false
+      - -Dintrospection=enabled
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/libadwaita/1.5/libadwaita-1.5.0.tar.xz
+        sha256: fd92287df9bb95c963654fb6e70d3e082e2bcb37b147e0e3c905567167993783
+
+  - name: pygobject
+    buildsystem: meson
+    config-opts:
+      - -Dpycairo=disabled
+      - -Dtests=false
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/pygobject/3.48/pygobject-3.48.2.tar.xz
+        sha256: 0794aeb4a9be31a092ac20621b5f54ec280f9185943d328b105cdae6298ad1a7
+
+  - name: atomic-basejump
+    buildsystem: simple
+    build-commands:
+      # Pure-Python deps (requests, dasbus, …) are installed by the nested
+      # basejump-deps module, which fetches pinned wheels from PyPI at build
+      # time. PyQt6 and PyGObject are provided by the PyQt BaseApp and the
+      # GTK modules above — never pip-installed here. Also avoid
+      # `pip install .`: setuptools package discovery walks the whole source
+      # tree and hangs when build artifacts are present via type:dir.
+      # Stamp the real build time into appinfo.py for the About page.
+      # Executed verbatim via /bin/sh -c, so plain shell syntax applies.
+      - TS="$(date -u '+%F %T UTC')"; for pyver in 3.11 3.12 3.13; do mkdir -p /app/lib/python${pyver}/site-packages/basejump && cp -r basejump/* /app/lib/python${pyver}/site-packages/basejump/ && sed -i "s/build_timestamp = \"Just now\"/build_timestamp = \"$TS\"/" /app/lib/python${pyver}/site-packages/basejump/core/appinfo.py; done
+      - install -D -m 755 basejump-launcher.sh /app/bin/basejump-launcher
+      - install -D -m 644 io.github.joshuaroman.AtomicBasejump.desktop /app/share/applications/io.github.joshuaroman.AtomicBasejump.desktop
+      - install -D -m 644 io.github.joshuaroman.AtomicBasejump.metainfo.xml /app/share/metainfo/io.github.joshuaroman.AtomicBasejump.metainfo.xml
+      - install -D -m 644 icons/hicolor/64x64/apps/io.github.joshuaroman.AtomicBasejump.png /app/share/icons/hicolor/64x64/apps/io.github.joshuaroman.AtomicBasejump.png
+      - install -D -m 644 icons/hicolor/128x128/apps/io.github.joshuaroman.AtomicBasejump.png /app/share/icons/hicolor/128x128/apps/io.github.joshuaroman.AtomicBasejump.png
+      - install -D -m 644 icons/hicolor/256x256/apps/io.github.joshuaroman.AtomicBasejump.png /app/share/icons/hicolor/256x256/apps/io.github.joshuaroman.AtomicBasejump.png
+      - install -D -m 644 icons/hicolor/512x512/apps/io.github.joshuaroman.AtomicBasejump.png /app/share/icons/hicolor/512x512/apps/io.github.joshuaroman.AtomicBasejump.png
+    sources:
+      - type: dir
+        path: .
+        # Keep the build context small; these are local build outputs only.
+        skip:
+          - repo
+          - build-dir
+          - build-flatpak
+          - .flatpak-builder
+          - atomic-basejump.flatpak
+          - planning
+    modules:
+      - basejump-deps.json

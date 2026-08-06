@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.joshuaroman.AtomicBasejump</id>
+  <name>Atomic Basejump</name>
+  <summary>Manage rpm-ostree deployments and base images on Fedora Atomic</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="io.github.joshuaroman">
+    <name>Joshua Roman</name>
+  </developer>
+  <description>
+    <p>
+      Atomic Basejump is a desktop application for managing rpm-ostree system
+      deployments and OCI base images on Fedora Atomic desktops (Kinoite,
+      Aurora, Bazzite, Silverblue, and related images).
+    </p>
+    <p>
+      It ships dual native frontends — Kirigami (Plasma) and Libadwaita
+      (GNOME) — selected by desktop environment or user preference, sharing a
+      single Python core.
+    </p>
+    <p>
+      Status and deployment lists come from the system D-Bus interface of rpm-ostreed.
+      System mutations (upgrade, rebase, rollback, pin, package layers) run host
+      rpm-ostree / ostree via the Flatpak portal so transactions complete outside the
+      sandbox. This application is therefore a system utility and is not intended for
+      strict-sandbox catalogs such as Flathub without host access.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.joshuaroman.AtomicBasejump.desktop</launchable>
+  <url type="homepage">https://github.com/joshuaroman/atomic-basejump</url>
+  <url type="bugtracker">https://github.com/joshuaroman/atomic-basejump/issues</url>
+  <categories>
+    <category>System</category>
+    <category>Settings</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.9" date="2026-08-13" type="development">
+      <description>
+        <p>Pre-release 0.9 of the multi-frontend rewrite.</p>
+      </description>
+    </release>
+  </releases>
+</component>

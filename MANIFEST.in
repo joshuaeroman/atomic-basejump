@@ -1,0 +1,5 @@
+recursive-include basejump/ui_kde/qml *.qml
+recursive-include icons *
+include io.github.joshuaroman.AtomicBasejump.desktop
+include io.github.joshuaroman.AtomicBasejump.metainfo.xml
+include basejump-launcher.sh

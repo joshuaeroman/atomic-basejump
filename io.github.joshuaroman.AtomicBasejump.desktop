@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Atomic Basejump
+GenericName=Atomic Desktop Image Manager
+Comment=Manage rpm-ostree deployments and base images on Fedora Atomic / KDE Plasma
+Exec=basejump-launcher
+Icon=io.github.joshuaroman.AtomicBasejump
+Terminal=false
+Type=Application
+Categories=System;Settings;
+Keywords=ostree;rpm-ostree;atomic;bootc;kinoite;aurora;bazzite;silverblue;rebase;update;deployment;
+StartupWMClass=io.github.joshuaroman.AtomicBasejump
+X-GNOME-UsesNotifications=true

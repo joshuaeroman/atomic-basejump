@@ -1,0 +1,27 @@
+# Build outputs
+/build/
+/build-dir/
+/build-flatpak/
+/.flatpak-builder/
+/repo/
+*.flatpak
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.whl
+
+# Local planning notes (not shipped)
+/planning/
+
+# IDE / local tooling
+*.user
+.cache/
+compile_commands.json
+*.log
+
+# Editor swap
+*~
+*.swp
+.DS_Store

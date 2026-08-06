@@ -1,0 +1,24 @@
+[project]
+name = "atomic-basejump"
+version = "0.9"
+description = "Universal Desktop Environment Launcher for Atomic Basejump"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "PyGObject",
+    "PyQt6",
+    "requests",
+    "dasbus"
+]
+
+[project.scripts]
+atomic-basejump = "basejump.ui_kde.main:main"
+basejump-kde = "basejump.ui_kde.main:main"
+basejump-gnome = "basejump.ui_gnome.main:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["basejump*"]
