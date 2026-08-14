@@ -66,3 +66,12 @@ See [BUILD.md](BUILD.md) for Flatpak build and development workflows.
 ## Contributing
 
 See [BUILD.md](BUILD.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Screenshots
+
+<img width="962" height="710" alt="image" src="https://github.com/user-attachments/assets/59a79f5a-61c9-408d-8859-b3bf8232fbda" />
+
+<img width="961" height="682" alt="image" src="https://github.com/user-attachments/assets/0dd3018b-73cd-44bd-b8cb-66e400ffab97" />
+
