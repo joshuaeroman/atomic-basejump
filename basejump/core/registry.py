@@ -34,6 +34,25 @@ class ImageRegistryService:
         response.raise_for_status()
         return response
 
+    @staticmethod
+    def _classify_tags(tags):
+        """Separate user-facing streams and releases from registry build tags."""
+        versions = sorted({
+            tag for tag in tags
+            if tag.isdigit() or ("-" in tag and tag.split("-", 1)[1].isdigit())
+        })
+        version_set = set(versions)
+        streams = []
+        for tag in tags:
+            # Fedora publishes dated builds and architecture-specific aliases
+            # alongside the release and stream tags in the same repository.
+            is_dated_build = re.fullmatch(r"\d+\.\d{8}\.\d+(?:-.+)?", tag)
+            is_architecture_tag = re.fullmatch(r"\d+-(?:[A-Za-z0-9_]+)", tag)
+            if tag in version_set or is_dated_build or is_architecture_tag:
+                continue
+            streams.append(tag)
+        return streams, versions
+
     def fetchTags(self, image_ref, on_success, on_error):
         self.loading_tags = True
 
@@ -41,9 +60,9 @@ class ImageRegistryService:
             try:
                 data = self._request(image_ref, "/v2/{repository}/tags/list").json()
                 tags = [tag for tag in data.get("tags", []) if not tag.startswith("sha256-") and not tag.endswith(".sig")]
-                versions = sorted({tag for tag in tags if tag.isdigit() or ("-" in tag and tag.split("-", 1)[1].isdigit())})
+                streams, versions = self._classify_tags(tags)
                 date_tags = [tag for tag in tags if re.search(r"\d{8}", tag)]
-                on_success(image_ref, tags, versions, date_tags)
+                on_success(image_ref, streams, versions, date_tags)
             except Exception as error:
                 on_error(image_ref, str(error))
             finally:
