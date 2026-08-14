@@ -270,7 +270,10 @@ class ImageBrowserPage(Gtk.Box):
             self.tag_row.set_selected(tags.index(preferred))
             self._preferred_tag = ""
         elif self.tag_model.get_n_items() > 0:
-            self.tag_row.set_selected(0)
+            if not self.use_version_tag and "latest" in tags:
+                self.tag_row.set_selected(tags.index("latest"))
+            else:
+                self.tag_row.set_selected(0)
 
     def update_ref(self):
         type_idx = self.type_row.get_selected()

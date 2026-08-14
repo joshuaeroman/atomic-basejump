@@ -30,6 +30,7 @@ from basejump.core.ostree import (
 from basejump.core.overlays import OverlayService
 from basejump.core.appinfo import AppInfo
 from basejump.core.settings import SettingsManager
+from basejump.core.registry import ImageRegistryService
 
 
 class DesktopFamilyHelpersTest(unittest.TestCase):
@@ -46,7 +47,6 @@ class DesktopFamilyHelpersTest(unittest.TestCase):
     def test_desktop_family_unknown_empty(self):
         self.assertEqual(desktop_family_from_ref(""), "unknown")
         self.assertEqual(desktop_family_from_ref("custom.local/mystery"), "unknown")
-
     def test_deployment_image_ref_prefers_container_ref(self):
         dep = {
             "container-image-reference": "ostree-image-signed:docker://ghcr.io/ublue-os/bluefin:gts",
@@ -68,6 +68,29 @@ class DesktopFamilyHelpersTest(unittest.TestCase):
     def test_plasma_login_repair_available_false_no_pending(self):
         booted = {"container-image-reference": "ghcr.io/ublue-os/bluefin:stable"}
         self.assertFalse(plasma_login_repair_available(booted, {}))
+
+
+class ImageRegistryTagClassificationTest(unittest.TestCase):
+    def test_kinoite_build_tags_are_not_streams(self):
+        tags = [
+            "39",
+            "42",
+            "42.20250717.0014",
+            "42.20250718.0016",
+            "42-aarch64",
+            "42-ppc64le",
+            "42-x86_64",
+            "43",
+            "43.20250718.0",
+            "43-x86_64",
+            "latest",
+            "rawhide",
+        ]
+
+        streams, versions = ImageRegistryService._classify_tags(tags)
+
+        self.assertEqual(streams, ["latest", "rawhide"])
+        self.assertEqual(versions, ["39", "42", "43"])
 
 
 class OstreeDerivedFlagsTest(unittest.TestCase):

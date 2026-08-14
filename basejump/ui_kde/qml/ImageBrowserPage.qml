@@ -148,10 +148,15 @@ Kirigami.ScrollablePage {
         return -1
     }
 
+    function defaultTagIndex(list) {
+        var latest = page.indexOfTag(list, "latest")
+        return latest >= 0 ? latest : 0
+    }
+
     function selectPreferredTag(streams, versions) {
         var tag = page.preferredTag
         if (!tag || tag.length === 0) {
-            page.selectedStreamIndex = 0
+            page.selectedStreamIndex = page.defaultTagIndex(streams)
             page.selectedVersionIndex = 0
             return
         }
@@ -288,7 +293,7 @@ Kirigami.ScrollablePage {
                 } else {
                     if (streams && streams.length > 0) {
                         page.availableStreams = streams
-                        page.selectedStreamIndex = 0
+                        page.selectedStreamIndex = page.defaultTagIndex(streams)
                     }
                     if (versions && versions.length > 0) {
                         page.availableVersions = versions
