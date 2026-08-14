@@ -42,7 +42,7 @@ Primary distribution is **GitHub / self-built Flatpak**, not Flathub, because ho
 
 Please report security-relevant bugs via GitHub Issues or GitHub Security Advisories on the project repository:
 
-https://github.com/joshuaroman/atomic-basejump
+https://github.com/joshuaeroman/atomic-basejump
 
 Include steps to reproduce, whether you used Flatpak or a native binary, and
 relevant output from the in-app transaction log dialog. If the issue involves
