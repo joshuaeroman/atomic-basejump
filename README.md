@@ -1,6 +1,6 @@
 # Atomic Basejump
 
-**Atomic Basejump** is a desktop application for managing system deployments, base images, and package layers on Fedora Atomic desktops (Silverblue, Kinoite, Aurora, Bazzite, Bluefin, and custom bootc images).
+**Atomic Basejump** is a desktop application for managing system deployments, base images, and package layers on Fedora Atomic desktops (Silverblue, Kinoite, Aurora, Bazzite, Bluefin, and other rpm-ostree based images).
 
 **Status:** pre-release **0.9** of the multi-frontend rewrite — expect rough edges; report issues on the tracker below.
 
